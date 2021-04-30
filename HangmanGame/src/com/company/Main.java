@@ -136,7 +136,9 @@ After 3 (Or however Many) Failed guesses, Player loses
         while (invalidR) {
             String guess = input.next();
             guess.toUpperCase();
-            if(guess.length() == 1)
+            if(guess.length() == 1){
+                break;
+            }
 
         }
     }
@@ -215,20 +217,36 @@ After 3 (Or however Many) Failed guesses, Player loses
         int badGuesses;
         boolean replay = true;
         boolean gameOn = true;
+        boolean gameLose = false;
         String theWord = "";
+        ArrayList<String> Answer = new ArrayList<>();
+        ArrayList<String> Display = new ArrayList<>();
+
 
         Random randomize = new Random();
         int rand;
 
         while(replay){
-            rand = randomize.nextInt(22) + 1;
             System.out.println("\n\nChoosing a Word to use for the game.");
+            rand = randomize.nextInt(22) + 1;
             theWord = wordGen(rand);
             badGuesses = 0;
 
+            String[] wordHold = theWord.split("");
+            for(String ch : wordHold){
+                ch += " ";
+                Answer.add(ch);
+            }
+
+            for(String ch : Answer){
+                Display.add("_ ");
+            }
+
             while(gameOn){
+
                 eventUpdate();
                 wordUpdate();
+
 
             }
             replay = replayGame();
