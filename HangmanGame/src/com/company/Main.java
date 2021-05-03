@@ -133,21 +133,24 @@ After 3 (Or however Many) Failed guesses, Player loses
         return replay;
     }
 
-    public static String getGuess(ArrayList<String> LetterGuesses) {
+    public static String getGuess(ArrayList<String> LetterGuesses, ArrayList<String> Display) {
         Scanner input = new Scanner(System.in);
         boolean invalidR = true;
         String guess = "";
         String Guess = "";
         while (invalidR) {
+            System.out.println("\nGo ahead and make guess a letter! ");
             guess = input.next();
             Guess = guess.toUpperCase();
             Guess += " ";
-            if(LetterGuesses.contains(Guess)){
+            if(LetterGuesses.contains(Guess) || Display.contains(Guess)){
                 invalidR = true;
                 System.out.println("You guessed [" + Guess + "] already. Try again");
             }else {
                 if (Guess.length() == 2) {
                     invalidR = false;
+                }else{
+                    System.out.println("Invalid Input, Please Try Again. Single Letters Only.");
                 }
             }
 
@@ -221,12 +224,6 @@ After 3 (Or however Many) Failed guesses, Player loses
         for(String elem : Display){
             System.out.print(elem.toUpperCase());
         }
-
-        System.out.println("\nYour Previous Guesses: ");
-        for(String elem : LetterGuesses){
-            System.out.print(elem.toUpperCase());
-        }
-
     }
 
     public static boolean winCondition(ArrayList<String> Answer, ArrayList<String> Display){
@@ -260,6 +257,7 @@ After 3 (Or however Many) Failed guesses, Player loses
         boolean gameLose = false;
         boolean guessWrong = false;
         String theWord = "";
+        String CH = "";
         String guess = "";
         ArrayList<String> Answer = new ArrayList<>();
         ArrayList<String> Display = new ArrayList<>();
@@ -285,12 +283,12 @@ After 3 (Or however Many) Failed guesses, Player loses
 
             String[] wordHold = theWord.split("");
             for(String ch : wordHold){
-                ch.toUpperCase();
-                ch += " ";
-                Answer.add(ch);
+                CH = ch.toUpperCase();
+                CH += " ";
+                Answer.add(CH);
             }
 
-            for(String ch : Answer){
+            for(String elem : Answer){
                 Display.add("_ ");
             }
 
@@ -305,7 +303,7 @@ After 3 (Or however Many) Failed guesses, Player loses
             //The Game Round (Will always play at least once)
             while(gameOn){
 
-                guess = getGuess(LetterGuesses);
+                guess = getGuess(LetterGuesses, Display);
                 guessWrong = testGuess(guess, Answer);
 
                 if(guessWrong){
@@ -321,26 +319,31 @@ After 3 (Or however Many) Failed guesses, Player loses
                     }
                 }
 
+                eventUpdate(badGuesses);
+                wordUpdate(Display, LetterGuesses);
+                System.out.println("\nYour Previous Guesses: ");
+                for(String elem : LetterGuesses){
+                    System.out.print(elem.toUpperCase());
+                }
+
                 if(badGuesses >= 6){
                     gameOn = false;
                     gameLose = true;
+                    System.out.println("\n\n-=-=-=-=-\nUh Oh, seems like you've made your last guess. . .");
                 }
 
-
-                eventUpdate(badGuesses);
-                wordUpdate(Display, LetterGuesses);
-
                 if(winCondition(Answer, Display)){
-                    System.out.println("Congrats " + name + ", you won the round!");
+                    System.out.println("\n\nCongrats " + name + ", you won the round!");
                     System.out.println("The word was: ");
                     for(String elem : wordHold){
                         System.out.print(elem.toUpperCase());
                     }
                     gameOn = false;
+                    gameLose = false;
                 }
             }
             if(gameLose){
-                System.out.println();
+                System.out.println("That was a good try. And too bad, they seemed like a nice person.\n-=-=-=-=-\n");
             }
             replay = replayGame();
             if(replay){
