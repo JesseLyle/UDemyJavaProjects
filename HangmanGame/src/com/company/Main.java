@@ -1,5 +1,6 @@
 package com.company;
 
+import java.awt.image.DataBufferUShort;
 import java.util.*;
 
 public class Main {
@@ -106,17 +107,20 @@ After 3 (Or however Many) Failed guesses, Player loses
 
     public static boolean replayGame() {
         Scanner input = new Scanner(System.in);
-        System.out.println("Would you like to play again? Y/N\n");
+        System.out.println("\n\nWould you like to play again? Y/N\n");
         boolean invalidR = true;
         boolean replay = false;
-        while (invalidR) {
-            String response = input.nextLine();
+        String response = "";
+        String Response = "";
 
-            if(response.equals("Y")) {
+        while (invalidR) {
+            response = input.nextLine();
+            Response = response.toUpperCase();
+            if(Response.equals("Y")) {
                 invalidR = false;
                 replay = true;
             }else{
-                if(response.equals("N")){
+                if(Response.equals("N")){
                     invalidR = false;
                     replay = false;
                 }else{
@@ -129,32 +133,37 @@ After 3 (Or however Many) Failed guesses, Player loses
         return replay;
     }
 
-    public static String getGuess() {
+    public static String getGuess(ArrayList<String> LetterGuesses) {
         Scanner input = new Scanner(System.in);
         boolean invalidR = true;
-
+        String guess = "";
+        String Guess = "";
         while (invalidR) {
-            String guess = input.next();
-            guess.toUpperCase();
-            if(guess.length() == 1){
-                break;
+            guess = input.next();
+            Guess = guess.toUpperCase();
+            Guess += " ";
+            if(LetterGuesses.contains(Guess)){
+                invalidR = true;
+                System.out.println("You guessed [" + Guess + "] already. Try again");
+            }else {
+                if (Guess.length() == 2) {
+                    invalidR = false;
+                }
             }
 
         }
+        return Guess;
     }
 
-    public static boolean testGuess(String guess){  //Still working on
+    public static boolean testGuess(String Guess, ArrayList<String> Answer){  //Still working on -- Probably done now
         boolean badGuess = false;
-            if (guess.equals(/*Previous Guesses*/)) {
-                System.out.println("You guessed [" + guess + "] already. Try again");
-            } else {
-                if (guess.equals(/*Correct Letter*/)) {
+                if (Answer.contains(Guess)) {
                     System.out.println("You guessed a letter correctly!");
                 } else {
-                    System.out.println("Your guess, [" + guess + "] was a mistake.");
+                    System.out.println("Your guess, [" + Guess + "] was a mistake.");
                     badGuess = true;
                 }
-            }
+
 
         return badGuess;
     }
@@ -183,29 +192,59 @@ After 3 (Or however Many) Failed guesses, Player loses
                 System.out.println(" 0      |");
                 System.out.println("~|      |");
                 System.out.println("        |");
+                break;
             case 4:
                 System.out.println(" 0      |");
                 System.out.println("~|~     |");
                 System.out.println("        |");
+                break;
             case 5:
                 System.out.println(" 0      |");
                 System.out.println("~|~     |");
                 System.out.println("/       |");
+                break;
             case 6:
                 System.out.println(" 0      |");
                 System.out.println("~|~     |");
                 System.out.println("/ \\     |");
+                break;
             default:
                 System.out.println("An Error Occurred in the System.");
+                break;
         }
         System.out.println("        |");
         System.out.println("   =========");
     }
 
-    public static void wordUpdate(ArrayList<String> Aquery, ){  //Still working on
+    public static void wordUpdate(ArrayList<String> Display, ArrayList<String> LetterGuesses){  //Still working on, effectively Word Display Update
+        System.out.println();
+        for(String elem : Display){
+            System.out.print(elem.toUpperCase());
+        }
 
+        System.out.println("\nYour Previous Guesses: ");
+        for(String elem : LetterGuesses){
+            System.out.print(elem.toUpperCase());
+        }
 
     }
+
+    public static boolean winCondition(ArrayList<String> Answer, ArrayList<String> Display){
+        if(Display.equals(Answer)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+    //
+    //                                  Oh Boy. . .
+    //
+
+
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -214,26 +253,39 @@ After 3 (Or however Many) Failed guesses, Player loses
         System.out.println("Pleasure to meet you " + name + ", I do hope you enjoy this session.");
 
         int gameRound = 1;
+        int index;
         int badGuesses;
         boolean replay = true;
         boolean gameOn = true;
         boolean gameLose = false;
+        boolean guessWrong = false;
         String theWord = "";
+        String guess = "";
         ArrayList<String> Answer = new ArrayList<>();
         ArrayList<String> Display = new ArrayList<>();
+        ArrayList<String> LetterGuesses = new ArrayList<>();
 
 
         Random randomize = new Random();
         int rand;
 
+
+        //The Gaming System
         while(replay){
             System.out.println("\n\nChoosing a Word to use for the game.");
             rand = randomize.nextInt(22) + 1;
             theWord = wordGen(rand);
             badGuesses = 0;
+            gameOn = true;
+
+            //For Reset of Data
+            Answer.removeAll(Answer);
+            Display.removeAll(Display);
+            LetterGuesses.removeAll(LetterGuesses);
 
             String[] wordHold = theWord.split("");
             for(String ch : wordHold){
+                ch.toUpperCase();
                 ch += " ";
                 Answer.add(ch);
             }
@@ -242,14 +294,62 @@ After 3 (Or however Many) Failed guesses, Player loses
                 Display.add("_ ");
             }
 
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=");
+            System.out.println("Start of Round: " + gameRound);
+            System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=");
+
+            eventUpdate(badGuesses);
+            wordUpdate(Display, LetterGuesses);
+
+
+            //The Game Round (Will always play at least once)
             while(gameOn){
 
-                eventUpdate();
-                wordUpdate();
+                guess = getGuess(LetterGuesses);
+                guessWrong = testGuess(guess, Answer);
+
+                if(guessWrong){
+                    badGuesses++;
+                    LetterGuesses.add(guess);
+                }else{
+                    index = 0;
+                    for(String elem : Answer){
+                        if(elem.equals(guess)){
+                            Display.set(index, guess);
+                        }
+                        index++;
+                    }
+                }
+
+                if(badGuesses >= 6){
+                    gameOn = false;
+                    gameLose = true;
+                }
 
 
+                eventUpdate(badGuesses);
+                wordUpdate(Display, LetterGuesses);
+
+                if(winCondition(Answer, Display)){
+                    System.out.println("Congrats " + name + ", you won the round!");
+                    System.out.println("The word was: ");
+                    for(String elem : wordHold){
+                        System.out.print(elem.toUpperCase());
+                    }
+                    gameOn = false;
+                }
+            }
+            if(gameLose){
+                System.out.println();
             }
             replay = replayGame();
+            if(replay){
+                System.out.println("\nAlrighty! Preparing Systems for a new round!");
+                gameRound++;
+            }else{
+                System.out.println("\nAww, well, it was nice playing with you!");
+                System.out.println("You played " + gameRound + " rounds!");
+            }
         }
 
 
