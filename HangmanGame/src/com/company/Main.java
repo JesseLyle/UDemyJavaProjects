@@ -26,7 +26,7 @@ After 3 (Or however Many) Failed guesses, Player loses
     //LetterCheck
     //EventUpdate
     //Query Input Receive
-    //
+
     public static String wordGen(int id){
         System.out.println("Computing. . .");
         String query = "";
@@ -139,7 +139,7 @@ After 3 (Or however Many) Failed guesses, Player loses
         String guess = "";
         String Guess = "";
         while (invalidR) {
-            System.out.println("\nGo ahead and make guess a letter! ");
+            System.out.println("\nGo ahead and guess a letter! ");
             guess = input.next();
             Guess = guess.toUpperCase();
             Guess += " ";
@@ -262,6 +262,7 @@ After 3 (Or however Many) Failed guesses, Player loses
         ArrayList<String> Answer = new ArrayList<>();
         ArrayList<String> Display = new ArrayList<>();
         ArrayList<String> LetterGuesses = new ArrayList<>();
+
 
 
         Random randomize = new Random();
