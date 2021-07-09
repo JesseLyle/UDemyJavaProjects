@@ -384,43 +384,7 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
-        /*
-        Start of the Tic-Tac-Toe game
-        Essential components
 
-        Greeting/Introduction
-        Rule for Controls (Typing 1-9, be sure to leave the number so Selection is easier
-            Replace Numbers in Display for Nought or Cross (O) or (X)
-        Setup certain variables
-        Pre-game
-        Session Start
-            Round Start
-                Turn Order
-            Round End/Retry
-        Session End
-        Score Tally Display
-        Goodbye
-
-        Times for Retrieving Input:
-            Name
-            X or O?
-            Ready to begin?
-            Where to place Mark.
-            >>Repeat until Round over
-            Play again?
-
-        How to save and reset progress
-        Variables to record number of wins by Player and CPU or CatScratch
-        Game Display Templates, Record Open and Closed Slots with an Array. Maybe a Hash
-
-        No, try using a 2D array for display and item changing. Everything will likely need to recorded using strings or
-        be able to parse between Int and String data types/Class
-
-        Recording which symbol is player or computer, use key:
-        1 = X
-        0 = O
-
-        */
 
         Scanner input = new Scanner(System.in);
         boolean endgame = true;
