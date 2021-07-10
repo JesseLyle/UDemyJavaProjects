@@ -1,5 +1,5 @@
 package com.company;
-
+import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
@@ -29,6 +29,10 @@ public class Main {
         //F
 
         //enemy goblin = new enemy();
+
+        String hobName = Hobgoblin.hobNameGen();
+
+        Random rand = new Random();
 
         char[][] map = {{'/','/','/','/','/'},      //Array Coordinates are as Designated [y] [x] in reverse values
                     {'\\', '\\', '\\', '\\', '\\'},
